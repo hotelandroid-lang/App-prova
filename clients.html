@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clients — GespetSoft</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="../index.html"><span class="nav-logo">🐾</span> GespetSoft</a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-item">Dashboard</a>
+    <a href="reserves.html" class="nav-item">Reserves</a>
+    <a href="clients.html" class="nav-item active">Clients</a>
+    <a href="animals.html" class="nav-item">Animals</a>
+    <a href="planning.html" class="nav-item">Planning</a>
+    <a href="vendes.html" class="nav-item">Vendes</a>
+    <a href="eines.html" class="nav-item">Eines</a>
+    <a href="configuracio.html" class="nav-item">Configuració</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title">Clients</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-secondary" onclick="window.location='importar-excel.html'">📊 Importar Excel</button>
+      <button class="btn btn-primary" onclick="window.location='nou-client.html'">+ Nou client</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-box" style="flex:1;min-width:180px">
+        <span>🔍</span>
+        <input type="text" id="search" placeholder="Cercar per nom, email, localitat..." oninput="renderTable()"/>
+      </div>
+      <select class="filter-sel" id="f-estat" onchange="renderTable()">
+        <option value="">Tots els estats</option>
+        <option value="actiu">Actiu</option>
+        <option value="inactiu">Inactiu</option>
+        <option value="VIP">VIP</option>
+      </select>
+      <select class="filter-sel" id="f-localitat" onchange="renderTable()">
+        <option value="">Totes les localitats</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortBy('id')">Codi</th>
+            <th onclick="sortBy('nom')">Nom</th>
+            <th onclick="sortBy('email')">Email</th>
+            <th onclick="sortBy('mobil')">Telèfon</th>
+            <th onclick="sortBy('localitat')">Localitat</th>
+            <th style="text-align:center">Animals</th>
+            <th onclick="sortBy('estat')">Estat</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <div id="pag-info"></div>
+      <div class="pag-btns" id="pag-btns"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/app.js"></script>
+<script>
+let sortCol = null, sortAsc = true, page = 1;
+const PER = 10;
+
+function populateLocalitats() {
+  const sel = document.getElementById('f-localitat');
+  const locs = [...new Set(DB.clients.map(c => c.localitat))].sort();
+  locs.forEach(l => sel.innerHTML += `<option value="${l}">${l}</option>`);
+}
+
+function getFiltered() {
+  const q  = document.getElementById('search').value.toLowerCase();
+  const fe = document.getElementById('f-estat').value;
+  const fl = document.getElementById('f-localitat').value;
+  return DB.clients.filter(c => {
+    const nom = `${c.nom} ${c.cognoms}`.toLowerCase();
+    const matchQ = !q || nom.includes(q) || c.email.toLowerCase().includes(q) || c.localitat.toLowerCase().includes(q);
+    const matchE = !fe || (fe === 'VIP' ? c.etiqueta === 'VIP' : c.estat === fe);
+    const matchL = !fl || c.localitat === fl;
+    return matchQ && matchE && matchL;
+  });
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+  renderTable();
+}
+
+function renderTable() {
+  let data = getFiltered();
+  if (sortCol) {
+    data = [...data].sort((a, b) => {
+      const va = String(a[sortCol] || '').toLowerCase();
+      const vb = String(b[sortCol] || '').toLowerCase();
+      return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+    });
+  }
+  const total = data.length;
+  const pages = Math.ceil(total / PER) || 1;
+  if (page > pages) page = 1;
+  const slice = data.slice((page - 1) * PER, page * PER);
+
+  document.getElementById('pag-info').textContent =
+    total === 0 ? 'Cap resultat' : `Mostrant ${(page-1)*PER+1}–${Math.min(page*PER,total)} de ${total}`;
+
+  const pb = document.getElementById('pag-btns');
+  pb.innerHTML = '';
+  for (let i = 1; i <= pages; i++) {
+    const b = document.createElement('button');
+    b.className = 'pag-btn' + (i === page ? ' active' : '');
+    b.textContent = i;
+    b.onclick = () => { page = i; renderTable(); };
+    pb.appendChild(b);
+  }
+
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = slice.map(c => `
+    <tr style="cursor:pointer" onclick="window.location='fitxa-client.html?id=${c.id}'">
+      <td style="color:#9ca3af;font-size:11px">${c.id}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="avatar av-blue">${c.nom[0]}${c.cognoms[0]}</div>
+          <div>
+            <div style="font-weight:500">${c.nom} ${c.cognoms}</div>
+            ${c.etiqueta ? `<span class="badge badge-vip">${c.etiqueta}</span>` : ''}
+          </div>
+        </div>
+      </td>
+      <td style="color:#6b7280">${c.email}</td>
+      <td>${c.mobil}</td>
+      <td>${c.localitat}</td>
+      <td style="text-align:center">
+        <span style="background:#f3f4f6;padding:2px 10px;border-radius:20px;font-size:11px">${c.animals.length}</span>
+      </td>
+      <td><span class="badge badge-${c.estat}">${c.estat === 'actiu' ? 'Actiu' : 'Inactiu'}</span></td>
+      <td>
+        <button onclick="event.stopPropagation();window.location='editar-client.html?id=${c.id}'"
+          class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Editar</button>
+      </td>
+    </tr>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  populateLocalitats();
+  renderTable();
+});
+</script>
+</body>
+</html>
