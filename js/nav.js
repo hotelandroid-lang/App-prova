@@ -167,14 +167,32 @@ function renderNav() {
   <div class="mobile-menu">
     <select onchange="if(this.value)window.location=this.value">
       <option value="">--- MENU ---</option>
-      <option value="${base}index.html">Dashboard</option>
-      <option value="${base}pages/reserves.html">Reserves</option>
-      <option value="${base}pages/clients.html">Clients</option>
-      <option value="${base}pages/animals.html">Animals</option>
-      <option value="${base}pages/planning.html">Planning</option>
-      <option value="${base}pages/vendes.html">Vendes</option>
-      <option value="${base}pages/eines.html">Eines</option>
-      <option value="${base}pages/configuracio.html">Configuració</option>
+      <option value="${base}index.html">🏠 Dashboard</option>
+      <optgroup label="── NOU ──">
+        <option value="${base}pages/nova-reserva.html">Nova Reserva</option>
+        <option value="${base}pages/nova-reserva.html">Nova Entrada</option>
+        <option value="${base}pages/nova-reserva.html">Nova Sortida</option>
+        <option value="${base}pages/nou-client.html">Nou Client</option>
+        <option value="${base}pages/nou-animal.html">Nou Animal</option>
+      </optgroup>
+      <optgroup label="── VEURE ──">
+        <option value="${base}pages/planning.html">Planning</option>
+        <option value="${base}pages/reserves.html">Reserves</option>
+        <option value="${base}pages/reserves.html">Reserves Online</option>
+        <option value="${base}pages/reserves.html">Entrades</option>
+        <option value="${base}pages/reserves.html">Sortides</option>
+        <option value="${base}pages/clients.html">Clients</option>
+        <option value="${base}pages/animals.html">Animals</option>
+        <option value="${base}pages/vendes.html">Vendes</option>
+        <option value="${base}pages/vendes.html">Despeses</option>
+      </optgroup>
+      <optgroup label="── EINES ──">
+        <option value="${base}pages/eines.html">Tasques</option>
+        <option value="${base}pages/eines.html">Avisos i Alertes</option>
+      </optgroup>
+      <optgroup label="── CONFIGURACIÓ ──">
+        <option value="${base}pages/configuracio.html">Configuració</option>
+      </optgroup>
     </select>
   </div>`;
 
