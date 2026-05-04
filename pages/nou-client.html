@@ -3,76 +3,374 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nou Client — GespetSoft</title>
+  <title>Nou Client — Hotel Gestió</title>
   <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    body{background:#f0f0f0;font-family:Arial,sans-serif;font-size:14px}
+    .page-wrap{max-width:900px;margin:0 auto;padding:1rem}
+    .page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .page-title{font-size:18px;font-weight:bold;color:#333}
+    .card{background:#fff;border:1px solid #dde8d8;border-radius:4px;margin-bottom:1rem;overflow:hidden}
+    .card-hdr{background:#eef5f4;border-bottom:2px solid #5a8e87;padding:8px 14px;font-size:13px;font-weight:bold;color:#5a8e87;display:flex;align-items:center;gap:8px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem;padding:1rem 1.25rem}
+    .field{margin-bottom:12px}
+    .field.full{grid-column:1/-1}
+    .field label{display:block;font-size:12px;font-weight:bold;margin-bottom:4px;color:#444}
+    .req{color:#cc0000;margin-left:2px}
+    .field-row{display:flex;align-items:center;border:1px solid #ccc;border-radius:3px;overflow:hidden;background:#fff;height:34px}
+    .field-row:focus-within{border-color:#5a8e87}
+    .field-icon{width:32px;height:34px;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border-right:1px solid #ddd;font-size:14px;flex-shrink:0}
+    .field-row input,.field-row select{flex:1;border:none;background:none;padding:0 8px;font-size:13px;height:34px;outline:none;font-family:Arial,sans-serif}
+    .field-row select{cursor:pointer}
+    .btn-verify{background:#5a8e87;color:#fff;border:none;padding:0 10px;font-size:11px;cursor:pointer;height:34px;white-space:nowrap}
+    .btn-verify:hover{background:#4a7870}
+    .sep{grid-column:1/-1;border-top:1px solid #e0ebe0;margin:4px 0 12px;padding-top:10px;font-size:11px;font-weight:bold;color:#888;letter-spacing:.05em;text-transform:uppercase}
+    .radio-group{display:flex;gap:16px;align-items:center;padding:6px 0}
+    .radio-group label{font-size:13px;display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:normal}
+    .radio-group input[type=radio]{accent-color:#5a8e87;cursor:pointer}
+    .docs-section{border-top:2px solid #5a8e87;padding:1rem 1.25rem;background:#f9fdf9}
+    .docs-title{font-size:14px;font-weight:bold;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .docs-alert{color:#cc0000;font-size:12px;margin-bottom:10px}
+    .docs-btns{display:flex;gap:10px;flex-wrap:wrap}
+    .btn-docs{background:#fff;border:1px solid #5a8e87;color:#5a8e87;border-radius:3px;padding:7px 14px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px}
+    .btn-docs:hover{background:#eef5f4}
+    .form-footer{display:flex;gap:8px;justify-content:flex-end;padding:12px 1.25rem;border-top:1px solid #e5e7eb;background:#f9fdf9}
+    .btn-save{background:#5a8e87;color:#fff;border:none;border-radius:3px;padding:8px 18px;font-size:13px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:6px}
+    .btn-save:hover{background:#4a7870}
+    .btn-save-animal{background:#2b5f9e;color:#fff;border:none;border-radius:3px;padding:8px 18px;font-size:13px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:6px}
+    .btn-save-animal:hover{background:#1e4a82}
+    .btn-cancel{background:#fff;border:1px solid #ccc;border-radius:3px;padding:8px 18px;font-size:13px;cursor:pointer;color:#333;display:flex;align-items:center;gap:6px}
+    .btn-cancel:hover{background:#f5f5f5}
+    .alert-ok{background:#eef5f4;border:1px solid #5a8e87;border-radius:3px;padding:8px 12px;font-size:13px;color:#2d6b64;margin-bottom:1rem;display:none}
+    .alert-err{background:#fceaea;border:1px solid #cc0000;border-radius:3px;padding:8px 12px;font-size:13px;color:#cc0000;margin-bottom:1rem;display:none}
+    .info-banner{background:#eef5f4;border-bottom:1px solid #c8dedd;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .info-banner span{font-size:12px;color:#2d6b64}
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:1}}
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhYLQsyDef3NKuBhQkY3QaoTyec_R6JNc&libraries=places&language=ca"></script>
 </head>
 <body>
 <div id="nav-placeholder"></div>
-<div class="page-wrap" style="max-width:860px">
-  <div class="page-header">
-    <div class="page-title">Nou Client</div>
-    <a href="clients.html" class="btn btn-secondary">← Tornar</a>
+
+<div class="page-wrap">
+  <div class="page-hdr">
+    <div class="page-title">👤 Nou Client</div>
+    <a href="clients.html" class="btn-cancel">← Tornar</a>
   </div>
+
+  <div id="msg-ok" class="alert-ok"></div>
+  <div id="msg-err" class="alert-err"></div>
+
   <div class="card">
-    <div style="background:#EAF3DE;border-bottom:.5px solid #e5e7eb;padding:10px 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div style="font-size:12px;color:#27500A">Envia un enllaç als teus clients perquè es registrin automàticament al teu negoci.</div>
-      <button class="btn btn-primary" style="font-size:12px">👤 Enviar enllaç de registre automàtic</button>
+    <div class="info-banner">
+      <span>📧 Envia un enllaç als teus clients perquè es registrin automàticament al teu negoci.</span>
+      <button class="btn-docs" onclick="alert('Funcionalitat disponible aviat')">👤 Enviar enllaç de registre automàtic</button>
     </div>
+
     <div class="form-grid">
-      <div class="field-group"><label class="field-label">Codi</label>
-        <div class="field-row"><div class="field-icon">🏷</div><input type="text" placeholder="Codi"/></div></div>
-      <div class="field-group"><label class="field-label">Etiqueta</label>
-        <div class="field-row"><div class="field-icon">🏷</div><select><option value="">Sense etiqueta</option><option>VIP</option><option>Regular</option><option>Nou</option></select></div></div>
-      <div class="field-group"><label class="field-label">Nom<span class="required">*</span></label>
-        <div class="field-row"><div class="field-icon">👤</div><input type="text" id="nom" placeholder="Nom"/></div></div>
-      <div class="field-group"><label class="field-label">Cognoms<span class="required">*</span></label>
-        <div class="field-row"><div class="field-icon">👤</div><input type="text" id="cognoms" placeholder="Cognoms"/></div></div>
-      <div class="field-group"><label class="field-label">Data Naixement</label>
-        <div class="field-row"><div class="field-icon">📅</div><input type="date"/></div></div>
-      <div class="field-group"><label class="field-label">Idioma preferit</label>
-        <div class="field-row"><div class="field-icon">🌐</div><select><option>SELECCIONEU</option><option>Català</option><option>Castellano</option><option>English</option></select></div></div>
-      <div class="field-group"><label class="field-label">NIF</label>
-        <div class="field-row"><div class="field-icon">📄</div><input type="text" placeholder="NIF"/></div></div>
-      <div class="field-group"><label class="field-label">Email</label>
-        <div class="field-row"><div class="field-icon">✉</div><input type="email" placeholder="Email"/></div></div>
-      <div class="field-group"><label class="field-label">Tel. Fix</label>
-        <div class="field-row"><div class="field-icon">📞</div><input type="tel" placeholder="Tel. Fix"/></div></div>
-      <div class="field-group"><label class="field-label">Tel. Mòbil</label>
-        <div class="field-row"><div class="field-icon">📱</div><input type="tel" placeholder="Tel. Mòbil"/></div></div>
-      <div class="field-group"><label class="field-label">WhatsApp</label>
-        <div class="field-row"><div class="field-icon">💬</div><input type="tel" placeholder="WhatsApp"/></div></div>
-      <div class="field-group"><label class="field-label">Nomeni</label>
-        <div class="field-row"><div class="field-icon">🏷</div><input type="text" placeholder="Malnom"/></div></div>
-      <div class="section-sep">Adreça</div>
-      <div class="field-group full"><label class="field-label">Adreça</label>
-        <div class="field-row"><div class="field-icon">📍</div><input type="text" placeholder="Adreça"/></div></div>
-      <div class="field-group"><label class="field-label">C.P.</label>
-        <div class="field-row"><div class="field-icon">📮</div><input type="text" placeholder="Codi postal"/></div></div>
-      <div class="field-group"><label class="field-label">Localitat</label>
-        <div class="field-row"><div class="field-icon">🏙</div><input type="text" placeholder="Localitat"/></div></div>
-      <div class="field-group"><label class="field-label">Província</label>
-        <div class="field-row"><div class="field-icon">🗺</div><input type="text" placeholder="Província"/></div></div>
-      <div class="field-group"><label class="field-label">País</label>
-        <div class="field-row"><div class="field-icon">🌍</div><select><option selected>Espanya</option><option>França</option><option>Andorra</option><option>Portugal</option></select></div></div>
+
+      <!-- IDENTIFICACIÓ -->
+      <div class="field">
+        <label>Codi</label>
+        <div class="field-row"><div class="field-icon">🏷</div><input type="text" id="codi" placeholder="Codi"/></div>
+      </div>
+      <div class="field">
+        <label>Etiqueta</label>
+        <div class="field-row"><div class="field-icon">🏷</div>
+          <select id="etiqueta"><option value="">Sense etiqueta</option><option>VIP</option><option>Regular</option><option>Nou</option><option>Problemàtic</option></select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Nom<span class="req">*</span></label>
+        <div class="field-row"><div class="field-icon">👤</div><input type="text" id="nom" placeholder="Nom"/></div>
+      </div>
+      <div class="field">
+        <label>Cognoms<span class="req">*</span></label>
+        <div class="field-row"><div class="field-icon">👤</div><input type="text" id="cognoms" placeholder="Cognoms"/></div>
+      </div>
+
+      <div class="field">
+        <label>Nomeni</label>
+        <div class="field-row"><div class="field-icon">🏷</div><input type="text" id="nomeni" placeholder="Malnom"/></div>
+      </div>
+      <div class="field">
+        <label>Data Naixement</label>
+        <div class="field-row"><div class="field-icon">📅</div><input type="date" id="data_naixement"/></div>
+      </div>
+
+      <div class="field">
+        <label>NIF</label>
+        <div class="field-row"><div class="field-icon">📄</div><input type="text" id="nif" placeholder="NIF"/>
+          <button class="btn-verify">Verificar</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Idioma preferit</label>
+        <div class="field-row"><div class="field-icon">🌐</div>
+          <select id="idioma"><option>SELECCIONEU</option><option selected>Català</option><option>Castellano</option><option>English</option><option>Français</option></select>
+        </div>
+      </div>
+
+      <!-- CONTACTE -->
+      <div class="sep">Contacte</div>
+
+      <div class="field">
+        <label>Email</label>
+        <div class="field-row"><div class="field-icon">✉</div><input type="email" id="email" placeholder="Email"/>
+          <button class="btn-verify">Enviar</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Tel. Fix</label>
+        <div class="field-row"><div class="field-icon">📞</div><input type="tel" id="tel_fix" placeholder="Tel. Fix"/></div>
+      </div>
+
+      <div class="field">
+        <label>Tel. Mòbil</label>
+        <div class="field-row"><div class="field-icon">📱</div><input type="tel" id="tel_mobil" placeholder="Tel. Mòbil principal"/></div>
+      </div>
+      <div class="field">
+        <label>Tel. Mòbil 2</label>
+        <div class="field-row"><div class="field-icon">📱</div><input type="tel" id="tel_mobil2" placeholder="Segon mòbil de contacte"/></div>
+      </div>
+
+      <div class="field">
+        <label>WhatsApp</label>
+        <div class="field-row"><div class="field-icon">💬</div><input type="tel" id="whatsapp" placeholder="WhatsApp"/></div>
+      </div>
+      <div class="field">
+        <label>Estat</label>
+        <div class="field-row"><div class="field-icon">✅</div>
+          <select id="estat"><option value="actiu">Actiu</option><option value="inactiu">Inactiu</option></select>
+        </div>
+      </div>
+
+      <!-- EMERGÈNCIES -->
+      <div class="sep">Persona de contacte d'emergències</div>
+
+      <div class="field">
+        <label>Nom persona emergències</label>
+        <div class="field-row"><div class="field-icon">🆘</div><input type="text" id="nom_emergencies" placeholder="Nom i cognoms"/></div>
+      </div>
+      <div class="field">
+        <label>Telèfon emergències</label>
+        <div class="field-row"><div class="field-icon">🆘</div><input type="tel" id="tel_emergencies" placeholder="Telèfon d'emergències"/></div>
+      </div>
+
+      <!-- ADREÇA -->
+      <div class="sep">Adreça</div>
+
+      <div class="field full">
+        <label>Adreça</label>
+        <div class="field-row"><div class="field-icon">📍</div><input type="text" id="adreca" placeholder="Adreça completa"/></div>
+      </div>
+      <div class="field">
+        <label>C.P.</label>
+        <div class="field-row"><div class="field-icon">📮</div><input type="text" id="cp" placeholder="Codi postal"/></div>
+      </div>
+      <div class="field">
+        <label>Localitat</label>
+        <div class="field-row"><div class="field-icon">🏙</div><input type="text" id="localitat" placeholder="Localitat"/></div>
+      </div>
+      <div class="field">
+        <label>Província</label>
+        <div class="field-row"><div class="field-icon">🗺</div><input type="text" id="provincia" placeholder="Província"/></div>
+      </div>
+      <div class="field">
+        <label>País</label>
+        <div class="field-row"><div class="field-icon">🌍</div>
+          <select id="pais"><option selected>Espanya</option><option>França</option><option>Andorra</option><option>Portugal</option><option>Alemanya</option></select>
+        </div>
+      </div>
+
+      <!-- ALTRES -->
+      <div class="sep">Altres</div>
+
+      <div class="field">
+        <label>Data Alta</label>
+        <div class="field-row"><div class="field-icon">📅</div><input type="date" id="data_alta"/></div>
+      </div>
+      <div class="field"></div>
+
+      <div class="field full">
+        <label>Detalls</label>
+        <div class="field-row" style="height:auto;align-items:flex-start">
+          <div class="field-icon" style="height:70px;align-items:flex-start;padding-top:8px">ℹ</div>
+          <textarea id="detalls" placeholder="Detalls addicionals sobre el client..." style="flex:1;border:none;background:none;padding:8px;font-size:13px;height:70px;outline:none;resize:vertical;font-family:Arial,sans-serif"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Acceptació condicions</label>
+        <div class="radio-group">
+          <label><input type="radio" name="condicions" value="1" id="cond_si"> Sí</label>
+          <label><input type="radio" name="condicions" value="0" id="cond_no" checked> No</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Acceptació rebre avisos</label>
+        <div class="radio-group">
+          <label><input type="radio" name="avisos" value="1" id="avis_si"> Sí</label>
+          <label><input type="radio" name="avisos" value="0" id="avis_no" checked> No</label>
+        </div>
+      </div>
+
     </div>
+
+    <!-- DOCUMENTS -->
+    <div class="docs-section">
+      <div class="docs-title">📋 Imprimir Documents i Contractes</div>
+      <div class="docs-alert">Actualmente no tens cap document ni contracte configurat!</div>
+      <div class="docs-btns">
+        <button class="btn-docs" onclick="alert('Configura documents a: Configuració → Documents i Contractes')">⚙ Configurar</button>
+        <button class="btn-docs" onclick="alert('Aprèn com gestionar documents')">📖 Aprèn més</button>
+      </div>
+    </div>
+
     <div class="form-footer">
-      <a href="clients.html" class="btn btn-secondary">Cancelar</a>
-      <button class="btn btn-primary" onclick="guardar(false)">💾 Guardar</button>
-      <button class="btn btn-primary" style="background:#185FA5" onclick="guardar(true)">🐾 Guardar i Afegir animal</button>
+      <a href="clients.html" class="btn-cancel">✕ Cancelar</a>
+      <button class="btn-save" onclick="guardar(false)">💾 Guardar</button>
+      <button class="btn-save-animal" onclick="guardar(true)">🐾 Guardar i Afegir animal</button>
     </div>
   </div>
 </div>
-<script src="../js/app.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/nav.js"></script>
 <script>
-function guardar(addAnimal){
-  const nom=document.getElementById('nom').value.trim();
-  const cog=document.getElementById('cognoms').value.trim();
-  if(!nom){document.getElementById('nom').focus();return;}
-  if(!cog){document.getElementById('cognoms').focus();return;}
-  if(addAnimal){ window.location='nou-animal.html'; }
-  else { window.location='clients.html'; }
+// Posar data alta d'avui per defecte
+document.addEventListener('DOMContentLoaded', () => {
+  const avui = new Date().toISOString().split('T')[0];
+  document.getElementById('data_alta').value = avui;
+});
+
+async function guardar(addAnimal) {
+  const nom = document.getElementById('nom').value.trim();
+  const cognoms = document.getElementById('cognoms').value.trim();
+  if (!nom) { document.getElementById('nom').focus(); showErr('El nom és obligatori'); return; }
+  if (!cognoms) { document.getElementById('cognoms').focus(); showErr('Els cognoms són obligatoris'); return; }
+
+  const client = {
+    codi: document.getElementById('codi').value.trim(),
+    etiqueta: document.getElementById('etiqueta').value,
+    nom, cognoms,
+    nomeni: document.getElementById('nomeni').value.trim(),
+    data_naixement: document.getElementById('data_naixement').value || null,
+    nif: document.getElementById('nif').value.trim(),
+    idioma: document.getElementById('idioma').value,
+    email: document.getElementById('email').value.trim(),
+    tel_fix: document.getElementById('tel_fix').value.trim(),
+    tel_mobil: document.getElementById('tel_mobil').value.trim(),
+    tel_mobil2: document.getElementById('tel_mobil2').value.trim(),
+    whatsapp: document.getElementById('whatsapp').value.trim(),
+    nom_emergencies: document.getElementById('nom_emergencies').value.trim(),
+    tel_emergencies: document.getElementById('tel_emergencies').value.trim(),
+    adreca: document.getElementById('adreca').value.trim(),
+    cp: document.getElementById('cp').value.trim(),
+    localitat: document.getElementById('localitat').value.trim(),
+    provincia: document.getElementById('provincia').value.trim(),
+    pais: document.getElementById('pais').value,
+    estat: document.getElementById('estat').value,
+    data_alta: document.getElementById('data_alta').value || null,
+    detalls: document.getElementById('detalls').value.trim(),
+    accepta_condicions: document.querySelector('input[name="condicions"]:checked')?.value === '1',
+    accepta_avisos: document.querySelector('input[name="avisos"]:checked')?.value === '1',
+  };
+
+  // Netejar camps buits
+  Object.keys(client).forEach(k => { if (client[k] === '') client[k] = null; });
+
+  try {
+    const saved = await saveClient(client);
+    if (saved) {
+      showOk(`Client ${nom} ${cognoms} guardat correctament!`);
+      if (addAnimal) {
+        setTimeout(() => window.location = `nou-animal.html?client_id=${saved.id}&client_nom=${encodeURIComponent(nom+' '+cognoms)}`, 1000);
+      } else {
+        setTimeout(() => window.location = 'clients.html', 1200);
+      }
+    } else {
+      showErr('Error guardant el client. Torna-ho a intentar.');
+    }
+  } catch(e) {
+    showErr('Error de connexió: ' + e.message);
+  }
+}
+
+function showOk(msg) {
+  const el = document.getElementById('msg-ok');
+  el.textContent = '✅ ' + msg;
+  el.style.display = 'block';
+  document.getElementById('msg-err').style.display = 'none';
+  window.scrollTo(0,0);
+}
+function showErr(msg) {
+  const el = document.getElementById('msg-err');
+  el.textContent = '❌ ' + msg;
+  el.style.display = 'block';
+  document.getElementById('msg-ok').style.display = 'none';
+  window.scrollTo(0,0);
 }
 </script>
-<script src="../js/nav.js"></script>
+
+<script>
+function initAutocomplete() {
+  const input = document.getElementById('adreca');
+  if (!input || typeof google === 'undefined') return;
+
+  const options = {
+    types: ['address'],
+    componentRestrictions: { country: ['es','fr','ad','pt'] },
+    fields: ['address_components', 'formatted_address']
+  };
+
+  const autocomplete = new google.maps.places.Autocomplete(input, options);
+
+  autocomplete.addListener('place_changed', () => {
+    const place = autocomplete.getPlace();
+    if (!place.address_components) return;
+
+    // Omplir camps automàticament
+    let cp = '', localitat = '', provincia = '', pais = '', carrer = '', numero = '';
+
+    place.address_components.forEach(comp => {
+      const types = comp.types;
+      if (types.includes('street_number')) numero = comp.long_name;
+      if (types.includes('route')) carrer = comp.long_name;
+      if (types.includes('postal_code')) cp = comp.long_name;
+      if (types.includes('locality')) localitat = comp.long_name;
+      if (types.includes('administrative_area_level_2')) provincia = comp.long_name;
+      if (types.includes('country')) pais = comp.long_name;
+    });
+
+    // Posar l adreça formatada
+    if (carrer) input.value = carrer + (numero ? ', ' + numero : '');
+    if (cp) document.getElementById('cp').value = cp;
+    if (localitat) document.getElementById('localitat').value = localitat;
+    if (provincia) document.getElementById('provincia').value = provincia;
+    if (pais) {
+      const paisSelect = document.getElementById('pais');
+      const paosMap = {'Spain':'Espanya','France':'França','Andorra':'Andorra','Portugal':'Portugal','Germany':'Alemanya'};
+      const paisCat = paosMap[pais] || pais;
+      Array.from(paisSelect.options).forEach(o => { if(o.value === paisCat) paisSelect.value = paisCat; });
+    }
+
+    // Destacar camps omplerts
+    ['cp','localitat','provincia'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.value) el.closest('.field-row').style.borderColor = '#5a8e87';
+    });
+  });
+}
+
+// Esperar que carregui Google Maps
+if (typeof google !== 'undefined') {
+  initAutocomplete();
+} else {
+  window.addEventListener('load', initAutocomplete);
+}
+</script>
 </body>
 </html>
