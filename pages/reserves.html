@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reserves — GespetSoft</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="../index.html"><span class="nav-logo">🐾</span> GespetSoft</a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-item">Dashboard</a>
+    <a href="reserves.html" class="nav-item active">Reserves</a>
+    <a href="clients.html" class="nav-item">Clients</a>
+    <a href="animals.html" class="nav-item">Animals</a>
+    <a href="planning.html" class="nav-item">Planning</a>
+    <a href="vendes.html" class="nav-item">Vendes</a>
+    <a href="eines.html" class="nav-item">Eines</a>
+    <a href="configuracio.html" class="nav-item">Configuració</a>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title">Reserves</div>
+    <button class="btn btn-primary" onclick="window.location='nova-reserva.html'">+ Nova reserva</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem">
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600;color:#3d7a25">4</div>
+      <div style="font-size:11px;color:#6b7280">Reserves actives</div>
+    </div></div>
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600;color:#BA7517">3</div>
+      <div style="font-size:11px;color:#6b7280">Pendents confirmació</div>
+    </div></div>
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600">0</div>
+      <div style="font-size:11px;color:#6b7280">Entrades avui</div>
+    </div></div>
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600">15</div>
+      <div style="font-size:11px;color:#6b7280">Sortides avui</div>
+    </div></div>
+  </div>
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-box" style="flex:1">
+        <span>🔍</span>
+        <input type="text" id="search" placeholder="Cercar per client, animal o número..." oninput="renderTable()"/>
+      </div>
+      <select class="filter-sel" id="f-estat" onchange="renderTable()">
+        <option value="">Tots els estats</option>
+        <option value="confirmada">Confirmada</option>
+        <option value="pendent">Pendent</option>
+        <option value="completada">Completada</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th>Reserva</th><th>Client</th><th>Animal</th>
+          <th>Entrada</th><th>Sortida</th><th>Hab.</th>
+          <th style="text-align:right">Total</th><th>Estat</th><th></th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="../js/app.js"></script>
+<script>
+function getClientNom(id){const c=DB.clients.find(x=>x.id===id);return c?`${c.nom} ${c.cognoms}`:'—';}
+function getAnimalNom(id){const a=DB.animals.find(x=>x.id===id);return a?`${a.nom} (${a.raca})`:'—';}
+function renderTable(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const fe=document.getElementById('f-estat').value;
+  const data=DB.reserves.filter(r=>{
+    const cn=getClientNom(r.clientId).toLowerCase();
+    const an=getAnimalNom(r.animalId).toLowerCase();
+    const matchQ=!q||(cn.includes(q)||an.includes(q)||r.id.toLowerCase().includes(q));
+    const matchE=!fe||r.estat===fe;
+    return matchQ&&matchE;
+  });
+  const estatBadge={confirmada:'badge-actiu',completada:'badge-inactiu',pendent:'badge-pendent'};
+  const estatLabel={confirmada:'Confirmada',completada:'Completada',pendent:'Pendent'};
+  document.getElementById('tbody').innerHTML=data.map(r=>`
+    <tr style="cursor:pointer">
+      <td style="font-weight:500;font-size:11px">${r.id}</td>
+      <td>${getClientNom(r.clientId)}</td>
+      <td style="color:#6b7280">${getAnimalNom(r.animalId)}</td>
+      <td style="color:#6b7280">${r.entrada}</td>
+      <td style="color:#6b7280">${r.sortida}</td>
+      <td><span style="background:#f3f4f6;padding:2px 8px;border-radius:20px;font-size:11px">${r.habitacio}</span></td>
+      <td style="text-align:right;font-weight:500">${r.total}€</td>
+      <td><span class="badge ${estatBadge[r.estat]}">${estatLabel[r.estat]}</span></td>
+      <td><button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Veure</button></td>
+    </tr>`).join('');
+}
+document.addEventListener('DOMContentLoaded',renderTable);
+</script>
+</body>
+</html>

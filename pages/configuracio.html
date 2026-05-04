@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Configuració — GespetSoft</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    .config-wrap{display:grid;grid-template-columns:200px 1fr;gap:1.25rem}
+    .config-menu{background:#fff;border:0.5px solid #e5e7eb;border-radius:12px;padding:.75rem 0;height:fit-content}
+    .menu-section{font-size:10px;font-weight:500;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px 4px}
+    .menu-item{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:12px;color:#6b7280;cursor:pointer;border-left:2px solid transparent;text-decoration:none}
+    .menu-item:hover{background:#f9fafb;color:#1a1a1a}
+    .menu-item.active{color:#3d7a25;background:#f9fafb;border-left:2px solid #3d7a25;font-weight:500}
+    .config-panel{display:none}
+    .config-panel.active{display:block}
+    .toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+    .toggle input{opacity:0;width:0;height:0}
+    .slider{position:absolute;inset:0;background:#d1d5db;border-radius:10px;cursor:pointer;transition:.2s}
+    .slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+    input:checked+.slider{background:#3d7a25}
+    input:checked+.slider:before{transform:translateX(16px)}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:.5px solid #f3f4f6}
+    .toggle-row:last-child{border-bottom:none}
+    .toggle-lbl{font-size:13px;font-weight:500}
+    .toggle-sub{font-size:11px;color:#6b7280;margin-top:2px}
+    .hab-table{width:100%;border-collapse:collapse;font-size:12px}
+    .hab-table th{background:#f9fafb;padding:7px 10px;text-align:left;font-size:11px;font-weight:500;color:#6b7280;border-bottom:.5px solid #e5e7eb}
+    .hab-table td{padding:7px 10px;border-bottom:.5px solid #f3f4f6;vertical-align:middle}
+    .hab-table tr:last-child td{border-bottom:none}
+    .user-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid #f3f4f6}
+    .user-row:last-child{border-bottom:none}
+    .race-chip{display:inline-flex;align-items:center;gap:4px;background:#f3f4f6;border:.5px solid #e5e7eb;border-radius:20px;padding:3px 10px;font-size:11px;margin:3px;cursor:pointer}
+    .race-chip:hover{border-color:#f87171}
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="../index.html"><span class="nav-logo">🐾</span> GespetSoft</a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-item">Dashboard</a>
+    <a href="reserves.html" class="nav-item">Reserves</a>
+    <a href="clients.html" class="nav-item">Clients</a>
+    <a href="animals.html" class="nav-item">Animals</a>
+    <a href="planning.html" class="nav-item">Planning</a>
+    <a href="vendes.html" class="nav-item">Vendes</a>
+    <a href="eines.html" class="nav-item">Eines</a>
+    <a href="configuracio.html" class="nav-item active">Configuració</a>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="page-title" style="margin-bottom:1.25rem">Configuració</div>
+  <div class="config-wrap">
+    <div class="config-menu">
+      <div class="menu-section">General</div>
+      <a class="menu-item active" onclick="show('empresa',this)">🏢 Dades empresa</a>
+      <a class="menu-item" onclick="show('idioma',this)">🌐 Idioma i moneda</a>
+      <div class="menu-section">Hotel</div>
+      <a class="menu-item" onclick="show('habitacions',this)">🛏 Habitacions</a>
+      <a class="menu-item" onclick="show('serveis',this)">➕ Serveis hotel</a>
+      <a class="menu-item" onclick="show('horari',this)">🕐 Horaris</a>
+      <div class="menu-section">Usuaris</div>
+      <a class="menu-item" onclick="show('usuaris',this)">👥 Empleats i usuaris</a>
+      <div class="menu-section">Animals</div>
+      <a class="menu-item" onclick="show('races',this)">🐾 Races</a>
+      <div class="menu-section">Facturació</div>
+      <a class="menu-item" onclick="show('pagament',this)">💳 Formes de pagament</a>
+    </div>
+
+    <div>
+      <!-- EMPRESA -->
+      <div class="config-panel active card" id="p-empresa">
+        <div class="card-body">
+          <div style="font-size:15px;font-weight:600;margin-bottom:4px">Dades de l'empresa</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:1.25rem">Informació bàsica del teu negoci</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="field-group"><label class="field-label">Nom del negoci</label>
+              <div class="field-row"><div class="field-icon">🏢</div><input type="text" value="Hotel Pets Barcelona"/></div></div>
+            <div class="field-group"><label class="field-label">NIF / CIF</label>
+              <div class="field-row"><div class="field-icon">📄</div><input type="text" value="B12345678"/></div></div>
+            <div class="field-group"><label class="field-label">Telèfon</label>
+              <div class="field-row"><div class="field-icon">📞</div><input type="tel" value="932 456 789"/></div></div>
+            <div class="field-group"><label class="field-label">Email</label>
+              <div class="field-row"><div class="field-icon">✉</div><input type="email" value="info@hotelpets.cat"/></div></div>
+            <div class="field-group" style="grid-column:1/-1"><label class="field-label">Adreça</label>
+              <div class="field-row"><div class="field-icon">📍</div><input type="text" value="Carrer Provença, 123, Barcelona"/></div></div>
+          </div>
+          <div style="margin-top:1rem;padding-top:1rem;border-top:.5px solid #e5e7eb">
+            <div class="toggle-row"><div><div class="toggle-lbl">Reserves online actives</div><div class="toggle-sub">Permet als clients fer reserves des del web</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Confirmació automàtica</div><div class="toggle-sub">Les reserves online es confirmen sense revisió</div></div><label class="toggle"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Recordatoris automàtics per email</div><div class="toggle-sub">Envia recordatoris 24h abans de l'entrada</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+          </div>
+          <div style="margin-top:1rem;text-align:right"><button class="btn btn-primary">Guardar canvis</button></div>
+        </div>
+      </div>
+
+      <!-- IDIOMA -->
+      <div class="config-panel card" id="p-idioma">
+        <div class="card-body">
+          <div style="font-size:15px;font-weight:600;margin-bottom:1rem">Idioma i moneda</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="field-group"><label class="field-label">Idioma</label>
+              <div class="field-row"><div class="field-icon">🌐</div><select><option selected>Català</option><option>Castellano</option><option>English</option></select></div></div>
+            <div class="field-group"><label class="field-label">Moneda</label>
+              <div class="field-row"><div class="field-icon">💶</div><select><option selected>Euro (€)</option><option>Dòlar ($)</option></select></div></div>
+            <div class="field-group"><label class="field-label">Format de data</label>
+              <div class="field-row"><div class="field-icon">📅</div><select><option selected>DD/MM/AAAA</option><option>MM/DD/AAAA</option></select></div></div>
+            <div class="field-group"><label class="field-label">IVA per defecte</label>
+              <div class="field-row"><div class="field-icon">%</div><select><option>0%</option><option>10%</option><option selected>21%</option></select></div></div>
+          </div>
+          <div style="margin-top:1rem;text-align:right"><button class="btn btn-primary">Guardar canvis</button></div>
+        </div>
+      </div>
+
+      <!-- HABITACIONS -->
+      <div class="config-panel card" id="p-habitacions">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <div style="font-size:15px;font-weight:600">Habitacions</div>
+            <button class="btn btn-primary">+ Nova habitació</button>
+          </div>
+          <table class="hab-table">
+            <thead><tr><th>Codi</th><th>Zona</th><th>Tipus</th><th>Preu/dia</th><th>Estat</th><th></th></tr></thead>
+            <tbody id="hab-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SERVEIS -->
+      <div class="config-panel card" id="p-serveis">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <div style="font-size:15px;font-weight:600">Serveis hotel</div>
+            <button class="btn btn-primary">+ Nou servei</button>
+          </div>
+          <table class="hab-table">
+            <thead><tr><th>Servei</th><th>Tipus preu</th><th>Preu</th><th>Actiu</th><th></th></tr></thead>
+            <tbody>
+              ${[['Menjar 2x/dia','Per dia','5,00€'],['Passeig diari','Per dia','4,00€'],['Bany i perruqueria','Fix','25,00€'],
+                 ['Foto diària','Per dia','2,00€'],['Medicació','Per dia','3,00€'],['Visita veterinari','Fix','30,00€'],
+                 ['Adiestrament','Per sessió','35,00€'],['Transport recollida','Fix','20,00€']].map(s=>`
+              <tr><td style="font-weight:500">${s[0]}</td><td style="color:#6b7280">${s[1]}</td><td style="font-weight:500">${s[2]}</td>
+              <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+              <td><button class="btn btn-secondary" style="padding:3px 8px;font-size:11px">Editar</button></td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HORARI -->
+      <div class="config-panel card" id="p-horari">
+        <div class="card-body">
+          <div style="font-size:15px;font-weight:600;margin-bottom:1rem">Horaris</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="field-group"><label class="field-label">Hora obertura</label>
+              <div class="field-row"><div class="field-icon">🌅</div><select><option>07:00</option><option selected>08:00</option><option>09:00</option></select></div></div>
+            <div class="field-group"><label class="field-label">Hora tancament</label>
+              <div class="field-row"><div class="field-icon">🌙</div><select><option>18:00</option><option selected>19:00</option><option>20:00</option></select></div></div>
+            <div class="field-group"><label class="field-label">Hora límit entrada</label>
+              <div class="field-row"><div class="field-icon">⏰</div><select><option>11:00</option><option selected>12:00</option><option>13:00</option></select></div></div>
+            <div class="field-group"><label class="field-label">Hora límit sortida</label>
+              <div class="field-row"><div class="field-icon">⏰</div><select><option selected>11:00</option><option>12:00</option><option>13:00</option></select></div></div>
+          </div>
+          <div style="margin-top:1rem;padding-top:1rem;border-top:.5px solid #e5e7eb">
+            <div class="toggle-row"><div><div class="toggle-lbl">Tancat els diumenges</div></div><label class="toggle"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Tancat els festius</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+          </div>
+          <div style="margin-top:1rem;text-align:right"><button class="btn btn-primary">Guardar canvis</button></div>
+        </div>
+      </div>
+
+      <!-- USUARIS -->
+      <div class="config-panel card" id="p-usuaris">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <div style="font-size:15px;font-weight:600">Empleats i usuaris</div>
+            <button class="btn btn-primary">+ Nou usuari</button>
+          </div>
+          ${[['AD','Admin Principal','Administrador','admin@hotelpets.cat','#EEEDFE','#3C3489'],
+             ['MP','Maria Pérez','Recepcionista','m.perez@hotelpets.cat','#f3f4f6','#6b7280'],
+             ['JG','Joan Garcia','Cuidador','j.garcia@hotelpets.cat','#f3f4f6','#6b7280'],
+             ['LR','Laura Ros','Recepcionista','l.ros@hotelpets.cat','#f3f4f6','#6b7280']].map(u=>`
+          <div class="user-row">
+            <div style="width:34px;height:34px;border-radius:50%;background:${u[4]};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:${u[5]};flex-shrink:0">${u[0]}</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500">${u[1]} <span style="background:${u[4]};color:${u[5]};font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500">${u[2]}</span></div>
+            <div style="font-size:11px;color:#6b7280">${u[3]}</div></div>
+            <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">Editar</button>
+          </div>`).join('')}
+          <div style="margin-top:1rem;padding-top:1rem;border-top:.5px solid #e5e7eb">
+            <div style="font-size:12px;font-weight:500;margin-bottom:8px">Permisos per rol</div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Recepcionista pot eliminar reserves</div></div><label class="toggle"><input type="checkbox"><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Recepcionista pot accedir a facturació</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Cuidador pot modificar fitxes d'animals</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+          </div>
+          <div style="margin-top:1rem;text-align:right"><button class="btn btn-primary">Guardar canvis</button></div>
+        </div>
+      </div>
+
+      <!-- RACES -->
+      <div class="config-panel card" id="p-races">
+        <div class="card-body">
+          <div style="font-size:15px;font-weight:600;margin-bottom:1rem">Races</div>
+          ${[['Gossos',['Golden Retriever','Labrador','Bulldog Francès','Caniche','Chihuahua','Beagle','Pastor Alemany','Shih Tzu','Mestís']],
+             ['Gats',['Persa','Siamès','Maine Coon','Britànic pèl curt','Ragdoll','Mestís']],
+             ['Altres',['Conill','Hàmster','Cobaia','Lloro','Tortuga']]].map(g=>`
+          <div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:.5px solid #e5e7eb">
+            <div style="font-size:12px;font-weight:500;margin-bottom:8px">${g[0]}</div>
+            <div>${g[1].map(r=>`<span class="race-chip">${r} <span style="color:#9ca3af">×</span></span>`).join('')}</div>
+            <div class="field-row" style="max-width:260px;margin-top:8px"><div class="field-icon">+</div><input type="text" placeholder="Afegir nova raça..."/></div>
+          </div>`).join('')}
+          <div style="text-align:right"><button class="btn btn-primary">Guardar canvis</button></div>
+        </div>
+      </div>
+
+      <!-- PAGAMENT -->
+      <div class="config-panel card" id="p-pagament">
+        <div class="card-body">
+          <div style="font-size:15px;font-weight:600;margin-bottom:1rem">Formes de pagament</div>
+          ${[['Efectiu','Pagament en mà al hotel',true],['Targeta bancària','TPV físic o online',true],
+             ['Transferència bancària','IBAN: ES12 3456 7890 1234 5678',true],['Bizum','Telèfon: 634 556 778',true],
+             ['PayPal','info@hotelpets.cat',false]].map(p=>`
+          <div class="toggle-row"><div><div class="toggle-lbl">${p[0]}</div><div class="toggle-sub">${p[1]}</div></div>
+          <label class="toggle"><input type="checkbox" ${p[2]?'checked':''}><span class="slider"></span></label></div>`).join('')}
+          <div style="margin-top:1rem;padding-top:1rem;border-top:.5px solid #e5e7eb">
+            <div style="font-size:12px;font-weight:500;margin-bottom:8px">Facturació electrònica</div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Activar facturació electrònica</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Enviar factura per email automàticament</div></div><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="field-group" style="margin-top:12px"><label class="field-label">Prefix de factura</label>
+              <div class="field-row" style="max-width:200px"><div class="field-icon">📄</div><input type="text" value="FAC-2026-"/></div></div>
+          </div>
+          <div style="margin-top:1rem;text-align:right"><button class="btn btn-primary">Guardar canvis</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/app.js"></script>
+<script>
+function show(id, el){
+  document.querySelectorAll('.config-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// Render habitacions
+document.addEventListener('DOMContentLoaded', () => {
+  const tbody = document.getElementById('hab-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = DB.habitacions.map(h=>`
+    <tr>
+      <td style="font-weight:500">${h.id}</td>
+      <td style="color:#6b7280">${h.zona}</td>
+      <td><span class="badge badge-${h.tipus}">${h.tipus==='gos'?'Gos':h.tipus==='gat'?'Gat':'Conill'}</span></td>
+      <td style="font-weight:500">${h.preuDia}€</td>
+      <td><span class="badge badge-actiu">Activa</span></td>
+      <td><button class="btn btn-secondary" style="padding:3px 8px;font-size:11px">Editar</button></td>
+    </tr>`).join('');
+});
+</script>
+</body>
+</html>

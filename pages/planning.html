@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Planning — GespetSoft</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    .planning-wrap{overflow-x:auto}
+    .planning-table{border-collapse:collapse;min-width:100%;font-size:11px}
+    .planning-table th{background:#f3f4f6;padding:6px 4px;text-align:center;font-weight:500;color:#6b7280;border:0.5px solid #e5e7eb;white-space:nowrap;min-width:34px;font-size:10px}
+    .planning-table th.today-col{background:#EAF3DE;color:#27500A}
+    .planning-table td{border:0.5px solid #e5e7eb;padding:1px 2px;height:26px;vertical-align:middle}
+    .row-label{background:#f3f4f6;padding:4px 8px;font-size:11px;font-weight:500;white-space:nowrap;min-width:60px;position:sticky;left:0;z-index:2}
+    .cell-stay{border-radius:3px;padding:2px 5px;font-size:10px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+    .stay-gos{background:#C0DD97;color:#27500A}
+    .stay-gat{background:#B5D4F4;color:#0C447C}
+    .stay-conill{background:#F4C0D1;color:#72243E}
+    .stay-in{background:#9FE1CB;color:#085041}
+    .stay-out{background:#F5C4B3;color:#712B13}
+    .cell-today{background:#f0f9f0}
+    .section-row td{background:#f9fafb;font-size:10px;font-weight:500;color:#6b7280;padding:3px 8px;letter-spacing:0.04em}
+    .legend{display:flex;gap:12px;padding:8px 1rem;border-bottom:0.5px solid #e5e7eb;flex-wrap:wrap}
+    .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#6b7280}
+    .leg-dot{width:12px;height:12px;border-radius:3px}
+    .summary-bar{display:grid;grid-template-columns:repeat(4,1fr);border-top:0.5px solid #e5e7eb}
+    .sum-cell{padding:10px;text-align:center;border-right:0.5px solid #e5e7eb}
+    .sum-cell:last-child{border-right:none}
+    .sum-num{font-size:18px;font-weight:600}
+    .sum-lbl{font-size:10px;color:#6b7280;margin-top:2px}
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="../index.html"><span class="nav-logo">🐾</span> GespetSoft</a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-item">Dashboard</a>
+    <a href="reserves.html" class="nav-item">Reserves</a>
+    <a href="clients.html" class="nav-item">Clients</a>
+    <a href="animals.html" class="nav-item">Animals</a>
+    <a href="planning.html" class="nav-item active">Planning</a>
+    <a href="vendes.html" class="nav-item">Vendes</a>
+    <a href="eines.html" class="nav-item">Eines</a>
+    <a href="configuracio.html" class="nav-item">Configuració</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title" id="range-label">Planning — Maig 2026</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-secondary" onclick="shiftWeek(-1)">‹ Anterior</button>
+      <button class="btn btn-primary" onclick="goToday()">Avui</button>
+      <button class="btn btn-secondary" onclick="shiftWeek(1)">Següent ›</button>
+      <select class="filter-sel" id="filter-type" onchange="renderPlanning()">
+        <option value="all">Tots els animals</option>
+        <option value="gos">Gossos</option>
+        <option value="gat">Gats</option>
+        <option value="conill">Conills</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot stay-in"></div>Entrada avui</div>
+      <div class="leg-item"><div class="leg-dot stay-out"></div>Sortida avui</div>
+      <div class="leg-item"><div class="leg-dot stay-gos"></div>Gos</div>
+      <div class="leg-item"><div class="leg-dot stay-gat"></div>Gat</div>
+      <div class="leg-item"><div class="leg-dot stay-conill"></div>Conill</div>
+    </div>
+    <div class="planning-wrap">
+      <table class="planning-table"><thead id="t-head"></thead><tbody id="t-body"></tbody></table>
+    </div>
+    <div class="summary-bar">
+      <div class="sum-cell"><div class="sum-num" style="color:#A32D2D">71</div><div class="sum-lbl">Ocupades</div></div>
+      <div class="sum-cell"><div class="sum-num" style="color:#3d7a25">112</div><div class="sum-lbl">Lliures</div></div>
+      <div class="sum-cell"><div class="sum-num">39%</div><div class="sum-lbl">Ocupació</div></div>
+      <div class="sum-cell"><div class="sum-num">95</div><div class="sum-lbl">Animals</div></div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/app.js"></script>
+<script>
+const TODAY = new Date(2026,4,3);
+const DAYS_SHOWN = 14;
+const dayNames = ['Dg','Dl','Dm','Dx','Dj','Dv','Ds'];
+const monthNames = ['Gen','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Oct','Nov','Des'];
+let startDate = new Date(2026,4,1);
+
+const rooms = [
+  {section:'Zona A — Gossos grans', rows:[
+    {id:'A01',type:'gos'},{id:'A02',type:'gos'},{id:'A03',type:'gos'},
+    {id:'A04',type:'gos'},{id:'A05',type:'gos'},{id:'A06',type:'gos'},
+  ]},
+  {section:'Zona B — Gossos petits', rows:[
+    {id:'B01',type:'gos'},{id:'B02',type:'gos'},{id:'B03',type:'gos'},
+    {id:'B04',type:'gos'},{id:'B05',type:'gos'},
+  ]},
+  {section:'Zona C — Gats', rows:[
+    {id:'C01',type:'gat'},{id:'C02',type:'gat'},{id:'C03',type:'gat'},
+    {id:'C04',type:'gat'},{id:'C05',type:'gat'},
+  ]},
+  {section:'Zona D — Conills i altres', rows:[
+    {id:'D01',type:'conill'},{id:'D02',type:'conill'},{id:'D03',type:'conill'},
+  ]},
+];
+
+const stays = [
+  {room:'A01',animal:'Tobi',client:'Mas',type:'gos',from:new Date(2026,3,28),to:new Date(2026,4,6)},
+  {room:'A02',animal:'Rocky',client:'López',type:'gos',from:new Date(2026,4,1),to:new Date(2026,4,8)},
+  {room:'A03',animal:'Max',client:'Sànchez',type:'gos',from:new Date(2026,4,3),to:new Date(2026,4,10)},
+  {room:'A04',animal:'Bruno',client:'Ferrer',type:'gos',from:new Date(2026,3,25),to:new Date(2026,4,5)},
+  {room:'A05',animal:'Duke',client:'Vidal',type:'gos',from:new Date(2026,4,5),to:new Date(2026,4,12)},
+  {room:'A06',animal:'Baldo',client:'Bosch',type:'gos',from:new Date(2026,4,2),to:new Date(2026,4,9)},
+  {room:'B01',animal:'Lola',client:'Ferrer',type:'gos',from:new Date(2026,4,1),to:new Date(2026,4,7)},
+  {room:'B02',animal:'Pepa',client:'Mas C.',type:'gos',from:new Date(2026,3,30),to:new Date(2026,4,4)},
+  {room:'B03',animal:'Coco',client:'Mas J.',type:'gos',from:new Date(2026,4,3),to:new Date(2026,4,11)},
+  {room:'B04',animal:'Nina',client:'Serra',type:'gos',from:new Date(2026,4,6),to:new Date(2026,4,13)},
+  {room:'B05',animal:'Bruno',client:'Pons',type:'gos',from:new Date(2026,4,2),to:new Date(2026,4,8)},
+  {room:'C01',animal:'Luna',client:'García',type:'gat',from:new Date(2026,3,29),to:new Date(2026,4,6)},
+  {room:'C02',animal:'Mia',client:'López',type:'gat',from:new Date(2026,4,1),to:new Date(2026,4,9)},
+  {room:'C03',animal:'Simba',client:'López',type:'gat',from:new Date(2026,4,3),to:new Date(2026,4,7)},
+  {room:'C04',animal:'Kitty',client:'Puig',type:'gat',from:new Date(2026,4,5),to:new Date(2026,4,14)},
+  {room:'C05',animal:'Tigre',client:'Rius',type:'gat',from:new Date(2026,4,2),to:new Date(2026,4,10)},
+  {room:'D01',animal:'Fluffy',client:'Bosch',type:'conill',from:new Date(2026,4,1),to:new Date(2026,4,5)},
+  {room:'D02',animal:'Bunny',client:'Camps',type:'conill',from:new Date(2026,4,4),to:new Date(2026,4,12)},
+  {room:'D03',animal:'Cotó',client:'Mas J.',type:'conill',from:new Date(2026,3,28),to:new Date(2026,4,6)},
+];
+
+function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function isBetween(d,from,to){return d>=from&&d<to;}
+function getStay(roomId,day){return stays.find(s=>s.room===roomId&&isBetween(day,s.from,s.to))||null;}
+function shiftWeek(dir){startDate=addDays(startDate,dir*7);renderPlanning();}
+function goToday(){startDate=new Date(2026,4,1);renderPlanning();}
+
+function renderPlanning(){
+  const filter=document.getElementById('filter-type').value;
+  const dates=Array.from({length:DAYS_SHOWN},(_,i)=>addDays(startDate,i));
+  const endDate=dates[dates.length-1];
+  const sm=monthNames[startDate.getMonth()];
+  const em=monthNames[endDate.getMonth()];
+  document.getElementById('range-label').textContent=`Planning — ${sm}${sm!==em?' – '+em:''} 2026`;
+
+  let head='<tr><th style="position:sticky;left:0;z-index:3;background:#f3f4f6">Hab.</th>';
+  dates.forEach(d=>{
+    const isT=sameDay(d,TODAY);
+    const dn=dayNames[d.getDay()];
+    head+=`<th class="${isT?'today-col':''}">${dn}<br>${d.getDate()}/${d.getMonth()+1}</th>`;
+  });
+  head+='</tr>';
+  document.getElementById('t-head').innerHTML=head;
+
+  let body='';
+  rooms.forEach(sec=>{
+    const rows=filter==='all'?sec.rows:sec.rows.filter(r=>r.type===filter);
+    if(!rows.length) return;
+    body+=`<tr class="section-row"><td colspan="${DAYS_SHOWN+1}">${sec.section}</td></tr>`;
+    rows.forEach(row=>{
+      body+=`<tr><td class="row-label">${row.id}</td>`;
+      dates.forEach(d=>{
+        const stay=getStay(row.id,d);
+        const isT=sameDay(d,TODAY);
+        if(stay){
+          const isIn=sameDay(d,stay.from);
+          const isOut=sameDay(addDays(d,1),stay.to);
+          let cls=`stay-${stay.type}`;
+          if(isIn) cls='stay-in';
+          else if(isOut) cls='stay-out';
+          body+=`<td class="${isT?'cell-today':''}"><div class="cell-stay ${cls}">${isIn?'▶ ':isOut?'':''}${stay.animal}</div></td>`;
+        } else {
+          body+=`<td class="${isT?'cell-today':''}"></td>`;
+        }
+      });
+      body+='</tr>';
+    });
+  });
+  document.getElementById('t-body').innerHTML=body;
+}
+
+renderPlanning();
+</script>
+</body>
+</html>

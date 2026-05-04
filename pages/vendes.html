@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vendes — GespetSoft</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="../index.html"><span class="nav-logo">🐾</span> GespetSoft</a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-item">Dashboard</a>
+    <a href="reserves.html" class="nav-item">Reserves</a>
+    <a href="clients.html" class="nav-item">Clients</a>
+    <a href="animals.html" class="nav-item">Animals</a>
+    <a href="planning.html" class="nav-item">Planning</a>
+    <a href="vendes.html" class="nav-item active">Vendes</a>
+    <a href="eines.html" class="nav-item">Eines</a>
+    <a href="configuracio.html" class="nav-item">Configuració</a>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title">Vendes i Despeses</div>
+    <button class="btn btn-primary">+ Nova venda</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem">
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600;color:#3d7a25">4.182€</div>
+      <div style="font-size:11px;color:#6b7280">Vendes maig</div>
+    </div></div>
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600;color:#3d7a25">1.840€</div>
+      <div style="font-size:11px;color:#6b7280">Cobrat</div>
+    </div></div>
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600;color:#A32D2D">2.342€</div>
+      <div style="font-size:11px;color:#6b7280">Pendent cobrar</div>
+    </div></div>
+    <div class="card" style="margin:0"><div class="card-body" style="text-align:center">
+      <div style="font-size:22px;font-weight:600;color:#3d7a25">2.942€</div>
+      <div style="font-size:11px;color:#6b7280">Benefici net</div>
+    </div></div>
+  </div>
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-box" style="flex:1"><span>🔍</span>
+        <input type="text" placeholder="Cercar factura o client..."/>
+      </div>
+      <select class="filter-sel"><option>Tots els estats</option><option>Pagat</option><option>Pendent</option></select>
+      <select class="filter-sel"><option>Maig 2026</option><option>Abril 2026</option></select>
+      <button class="btn btn-secondary">Exportar PDF</button>
+    </div>
+    <table>
+      <thead><tr><th>Factura</th><th>Client</th><th>Animal</th><th>Concepte</th><th>Data</th><th style="text-align:right">Import</th><th>Estat</th><th></th></tr></thead>
+      <tbody>
+        ${[
+          ['FAC-2026-038','Joan Mas','Coco','Estada 8 dies + menjar','03/05/2026','219,00€','pagat'],
+          ['FAC-2026-037','Anna Sànchez','Max','Estada 7 dies','02/05/2026','196,00€','pagat'],
+          ['FAC-2026-036','Pere López','Rocky','Estada 5 dies + passeig','01/05/2026','165,00€','pagat'],
+          ['FAC-2026-035','Laura Pons','Bruno','Estada 6 dies + bany','30/04/2026','157,00€','pendent'],
+          ['FAC-2026-034','Miquel Vidal','Duke','Estada 10 dies','28/04/2026','280,00€','pagat'],
+          ['FAC-2026-033','Maria García','Luna','Estada 4 dies','25/04/2026','80,00€','pendent'],
+        ].map(f=>`<tr>
+          <td style="font-weight:500;font-size:11px">${f[0]}</td>
+          <td>${f[1]}</td><td style="color:#6b7280">${f[2]}</td>
+          <td style="color:#6b7280">${f[3]}</td><td style="color:#6b7280">${f[4]}</td>
+          <td style="text-align:right;font-weight:500">${f[5]}</td>
+          <td><span class="badge ${f[6]==='pagat'?'badge-pagat':'badge-pendent'}">${f[6]==='pagat'?'Pagat':'Pendent'}</span></td>
+          <td><button class="btn btn-secondary" style="padding:4px 10px;font-size:11px">PDF</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="../js/app.js"></script>
+</body>
+</html>

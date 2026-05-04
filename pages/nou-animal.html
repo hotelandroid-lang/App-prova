@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nou Animal — GespetSoft</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="../index.html"><span class="nav-logo">🐾</span> GespetSoft</a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-item">Dashboard</a>
+    <a href="reserves.html" class="nav-item">Reserves</a>
+    <a href="clients.html" class="nav-item">Clients</a>
+    <a href="animals.html" class="nav-item active">Animals</a>
+    <a href="planning.html" class="nav-item">Planning</a>
+    <a href="vendes.html" class="nav-item">Vendes</a>
+    <a href="eines.html" class="nav-item">Eines</a>
+    <a href="configuracio.html" class="nav-item">Configuració</a>
+  </div>
+</nav>
+<div class="page-wrap" style="max-width:860px">
+  <div class="page-header">
+    <div class="page-title">Nou Animal</div>
+    <a href="animals.html" class="btn btn-secondary">← Tornar</a>
+  </div>
+  <div class="card">
+    <div style="background:#E6F1FB;border-bottom:.5px solid #e5e7eb;padding:10px 1.25rem;font-size:12px;color:#185FA5">
+      🐾 Nou Animal — omple les dades de la mascota
+    </div>
+    <div class="form-grid">
+      <div class="field-group full"><label class="field-label">Client<span class="required">*</span></label>
+        <div class="field-row"><div class="field-icon">🔍</div>
+          <input type="text" id="client" placeholder="Busqui el client..." list="cl-list"/>
+          <datalist id="cl-list"></datalist>
+        </div>
+      </div>
+      <div class="field-group"><label class="field-label">Nom<span class="required">*</span></label>
+        <div class="field-row"><div class="field-icon">🐾</div><input type="text" id="nom" placeholder="Nom de l'animal"/></div></div>
+      <div class="field-group"><label class="field-label">Etiqueta</label>
+        <div class="field-row"><div class="field-icon">🏷</div><select><option value="">Sense etiqueta</option><option>VIP</option><option>Al·lèrgia</option><option>Medicació</option></select></div></div>
+      <div class="field-group"><label class="field-label">Nomeni</label>
+        <div class="field-row"><div class="field-icon">🏷</div><input type="text" placeholder="Malnom"/></div></div>
+      <div class="field-group"><label class="field-label">Data Naixement</label>
+        <div class="field-row"><div class="field-icon">📅</div><input type="date"/></div></div>
+      <div class="field-group"><label class="field-label">Sexe</label>
+        <div class="field-row"><div class="field-icon">⚥</div><select><option>SELECCIONEU</option><option>Mascle</option><option>Femella</option></select></div></div>
+      <div class="field-group full"><label class="field-label">Raça<span class="required">*</span></label>
+        <div class="field-row"><div class="field-icon">🔍</div>
+          <select id="raca"><option>Busqui i seleccioni</option>
+            <optgroup label="Gossos"><option>Golden Retriever</option><option>Labrador</option><option>Bulldog Francès</option><option>Caniche</option><option>Chihuahua</option><option>Beagle</option><option>Pastor Alemany</option><option>Shih Tzu</option><option>Mestís</option></optgroup>
+            <optgroup label="Gats"><option>Persa</option><option>Siamès</option><option>Maine Coon</option><option>Britànic pèl curt</option><option>Mestís</option></optgroup>
+            <optgroup label="Altres"><option>Conill</option><option>Hàmster</option><option>Aus</option><option>Rèptil</option></optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="field-group"><label class="field-label">Color</label>
+        <div class="field-row"><div class="field-icon">🎨</div><input type="text" placeholder="#FFFFFF" style="max-width:100px"/>
+          <input type="color" value="#ffffff" style="width:32px;height:28px;border:none;padding:2px;cursor:pointer;background:none;margin-right:6px"/>
+        </div>
+      </div>
+      <div class="field-group"><label class="field-label">Varietat</label>
+        <div class="field-row"><div class="field-icon">⭐</div><input type="text" placeholder="Varietat"/></div></div>
+      <div class="field-group"><label class="field-label">Pelo</label>
+        <div class="field-row"><div class="field-icon">🏷</div><select><option>SELECCIONEU</option><option>Curt</option><option>Llarg</option><option>Arrissat</option><option>Llis</option><option>Sense pèl</option></select></div></div>
+      <div class="field-group"><label class="field-label">Talla</label>
+        <div class="field-row"><div class="field-icon">📏</div><select><option>SELECCIONEU</option><option>Molt petit (&lt;5kg)</option><option>Petit (5-10kg)</option><option>Mitjà (10-25kg)</option><option>Gran (25-45kg)</option><option>Molt gran (&gt;45kg)</option></select></div></div>
+      <div class="field-group"><label class="field-label">Pes</label>
+        <div class="field-row"><div class="field-icon">⚖</div><input type="number" placeholder="Pes" step="0.1" min="0"/>
+          <span style="padding:0 10px;font-size:12px;color:#6b7280;background:#f9fafb;border-left:.5px solid #e5e7eb;height:36px;display:flex;align-items:center">Kg.</span>
+        </div>
+      </div>
+      <div class="section-sep">Dades sanitàries</div>
+      <div class="field-group"><label class="field-label">Esterilitzat/da</label>
+        <div class="field-row"><div class="field-icon">⚕</div><select><option>SELECCIONEU</option><option>Sí</option><option>No</option></select></div></div>
+      <div class="field-group"><label class="field-label">MicroChip</label>
+        <div class="field-row"><div class="field-icon">📡</div><input type="text" placeholder="Número de MicroChip"/></div></div>
+      <div class="field-group"><label class="field-label">Passaport</label>
+        <div class="field-row"><div class="field-icon">📘</div><input type="text" placeholder="Número de passaport"/></div></div>
+      <div class="field-group"><label class="field-label">Cartilla</label>
+        <div class="field-row"><div class="field-icon">📋</div><select><option>SELECCIONEU</option><option>Sí, al dia</option><option>Sí, pendent</option><option>No</option></select></div></div>
+      <div class="field-group"><label class="field-label">Bovina ràbia?</label>
+        <div class="field-row"><div class="field-icon">💉</div><select><option>SELECCIONEU</option><option>Sí</option><option>No</option><option>No aplica</option></select></div></div>
+      <div class="field-group full"><label class="field-label">Vacunes</label>
+        <div class="field-row" style="align-items:flex-start"><div class="field-icon" style="margin-top:8px">💉</div>
+          <textarea placeholder="Detall de vacunes (tipus, dates, pròxima dosi...)"></textarea></div></div>
+      <div class="field-group full"><label class="field-label">Notes</label>
+        <div class="field-row" style="align-items:flex-start"><div class="field-icon" style="margin-top:8px">📝</div>
+          <textarea placeholder="Notes sobre comportament, alimentació especial, al·lèrgies..."></textarea></div></div>
+      <div class="field-group"><label class="field-label">Data Alta</label>
+        <div class="field-row"><div class="field-icon">📅</div><input type="date" value="2026-05-03"/></div></div>
+    </div>
+    <div class="form-footer">
+      <a href="animals.html" class="btn btn-secondary">Cancelar</a>
+      <button class="btn btn-primary" onclick="guardar()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const dl=document.getElementById('cl-list');
+  DB.clients.forEach(c=>{const o=document.createElement('option');o.value=`${c.nom} ${c.cognoms}`;dl.appendChild(o);});
+});
+function guardar(){
+  const nom=document.getElementById('nom').value.trim();
+  const client=document.getElementById('client').value.trim();
+  if(!nom){document.getElementById('nom').focus();return;}
+  if(!client){document.getElementById('client').focus();return;}
+  window.location='animals.html';
+}
+</script>
+</body>
+</html>

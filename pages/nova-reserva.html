@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nova Reserva — GespetSoft</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    .hab-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:6px}
+    .hab-item{border:.5px solid #e5e7eb;border-radius:8px;padding:8px 4px;cursor:pointer;text-align:center;font-size:11px;transition:border-color .15s}
+    .hab-item:hover{border-color:#3d7a25}
+    .hab-item.selected{border-color:#3d7a25;background:#EAF3DE}
+    .hab-item.ocupada{opacity:.4;cursor:not-allowed;background:#f9fafb}
+    .hab-num{font-size:13px;font-weight:600}
+    .resum-box{background:#f9fafb;border:.5px solid #e5e7eb;border-radius:8px;padding:1rem}
+    .resum-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:.5px solid #f3f4f6}
+    .resum-row:last-child{border-bottom:none;font-weight:600;font-size:13px;padding-top:8px}
+    .serveis-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+    .srv{display:flex;align-items:center;gap:8px;padding:7px 10px;border:.5px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:12px}
+    .srv:hover{background:#f9fafb}
+    .srv.on{border-color:#3d7a25;background:#EAF3DE}
+    .srv input{accent-color:#3d7a25;width:14px;height:14px}
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="../index.html"><span class="nav-logo">🐾</span> GespetSoft</a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-item">Dashboard</a>
+    <a href="reserves.html" class="nav-item">Reserves</a>
+    <a href="clients.html" class="nav-item">Clients</a>
+    <a href="animals.html" class="nav-item">Animals</a>
+    <a href="planning.html" class="nav-item">Planning</a>
+    <a href="vendes.html" class="nav-item">Vendes</a>
+    <a href="eines.html" class="nav-item">Eines</a>
+    <a href="configuracio.html" class="nav-item">Configuració</a>
+  </div>
+</nav>
+<div class="page-wrap" style="max-width:900px">
+  <div class="page-header">
+    <div class="page-title">Nova Reserva</div>
+    <a href="reserves.html" class="btn btn-secondary">← Tornar</a>
+  </div>
+  <div class="card">
+    <div class="form-grid">
+      <div class="field-group full">
+        <label class="field-label">Client<span class="required">*</span></label>
+        <div class="field-row"><div class="field-icon">👤</div>
+          <input type="text" id="client" placeholder="Busqui el client..." list="cl-list" oninput="onClient()"/>
+          <datalist id="cl-list"></datalist>
+        </div>
+      </div>
+      <div class="field-group full">
+        <label class="field-label">Animal<span class="required">*</span></label>
+        <div class="field-row"><div class="field-icon">🐾</div>
+          <select id="animal" onchange="updateResum()"><option>— Seleccioneu primer el client —</option></select>
+        </div>
+      </div>
+      <div class="section-sep">Dates de l'estada</div>
+      <div class="field-group">
+        <label class="field-label">Data entrada<span class="required">*</span></label>
+        <div class="field-row"><div class="field-icon">📅</div><input type="date" id="entrada" value="2026-05-03" onchange="updateResum()"/></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Hora entrada</label>
+        <div class="field-row"><div class="field-icon">⏰</div>
+          <select id="h-entrada" onchange="updateResum()">
+            <option>08:00</option><option>09:00</option><option selected>10:00</option>
+            <option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Data sortida<span class="required">*</span></label>
+        <div class="field-row"><div class="field-icon">📅</div><input type="date" id="sortida" value="2026-05-10" onchange="updateResum()"/></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Hora sortida</label>
+        <div class="field-row"><div class="field-icon">⏰</div>
+          <select id="h-sortida" onchange="updateResum()">
+            <option>08:00</option><option>09:00</option><option>10:00</option>
+            <option>11:00</option><option selected>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="section-sep">Habitació</div>
+      <div class="field-group full">
+        <label class="field-label">Selecciona habitació disponible<span class="required">*</span></label>
+        <div class="hab-grid" id="hab-grid"></div>
+      </div>
+      <div class="section-sep">Serveis addicionals</div>
+      <div class="field-group full">
+        <label class="field-label">Serveis contractats</label>
+        <div class="serveis-grid">
+          <label class="srv on" id="s0"><input type="checkbox" checked onchange="toggleSrv(this,'s0');updateResum()"> Menjar 2x/dia (+5€/dia)</label>
+          <label class="srv" id="s1"><input type="checkbox" onchange="toggleSrv(this,'s1');updateResum()"> Passeig diari (+4€/dia)</label>
+          <label class="srv" id="s2"><input type="checkbox" onchange="toggleSrv(this,'s2');updateResum()"> Bany i perruqueria (+25€)</label>
+          <label class="srv" id="s3"><input type="checkbox" onchange="toggleSrv(this,'s3');updateResum()"> Foto diària (+2€/dia)</label>
+          <label class="srv" id="s4"><input type="checkbox" onchange="toggleSrv(this,'s4');updateResum()"> Medicació (+3€/dia)</label>
+          <label class="srv" id="s5"><input type="checkbox" onchange="toggleSrv(this,'s5');updateResum()"> Visita veterinari (+30€)</label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Forma de pagament</label>
+        <div class="field-row"><div class="field-icon">💳</div>
+          <select><option>Efectiu</option><option>Targeta</option><option>Transferència</option><option>Bizum</option></select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Estat reserva</label>
+        <div class="field-row"><div class="field-icon">✅</div>
+          <select><option>Confirmada</option><option>Pendent confirmació</option></select>
+        </div>
+      </div>
+      <div class="field-group full">
+        <label class="field-label">Notes</label>
+        <div class="field-row" style="align-items:flex-start"><div class="field-icon" style="margin-top:8px">📝</div>
+          <textarea placeholder="Instruccions especials, al·lèrgies, medicació..."></textarea>
+        </div>
+      </div>
+      <div class="section-sep">Resum econòmic</div>
+      <div class="field-group full"><div class="resum-box" id="resum"></div></div>
+    </div>
+    <div class="form-footer">
+      <a href="reserves.html" class="btn btn-secondary">Cancelar</a>
+      <button class="btn btn-primary" onclick="guardar()">Confirmar reserva</button>
+    </div>
+  </div>
+</div>
+<script src="../js/app.js"></script>
+<script>
+let selHab=null;
+const ocupades=['A01','A02','A03','A05','A06','B01','B02','B03','B05','C01','C02','C03','C05','D01','D03'];
+
+function init(){
+  const dl=document.getElementById('cl-list');
+  DB.clients.forEach(c=>{ const o=document.createElement('option'); o.value=`${c.nom} ${c.cognoms}`; dl.appendChild(o); });
+  renderHabs(); updateResum();
+}
+
+function renderHabs(){
+  document.getElementById('hab-grid').innerHTML=DB.habitacions.map(h=>`
+    <div class="hab-item ${ocupades.includes(h.id)?'ocupada':''} ${selHab===h.id?'selected':''}"
+      onclick="${!ocupades.includes(h.id)?`selHab='${h.id}';renderHabs();updateResum()`:''}" title="${h.zona}">
+      <div class="hab-num">${h.id}</div>
+      <div style="font-size:9px;color:#6b7280;margin:2px 0">${h.tipus==='gos'?'Gos':h.tipus==='gat'?'Gat':'Conill'}</div>
+      <div style="font-size:9px;padding:1px 4px;border-radius:10px;background:${ocupades.includes(h.id)?'#FCEBEB':'#EAF3DE'};color:${ocupades.includes(h.id)?'#A32D2D':'#27500A'}">${ocupades.includes(h.id)?'Ocupada':'Lliure'}</div>
+    </div>`).join('');
+}
+
+function onClient(){
+  const val=document.getElementById('client').value.trim();
+  const c=DB.clients.find(x=>`${x.nom} ${x.cognoms}`===val);
+  const sel=document.getElementById('animal');
+  if(c){
+    const animals=DB.animals.filter(a=>c.animals.includes(a.id));
+    sel.innerHTML=animals.map(a=>`<option value="${a.id}" data-preu="${a.tipus==='gos'?25:a.tipus==='gat'?20:15}">${a.nom} — ${a.raca}</option>`).join('');
+  } else { sel.innerHTML='<option>— Seleccioneu primer el client —</option>'; }
+  updateResum();
+}
+
+function toggleSrv(cb,id){ document.getElementById(id).classList.toggle('on',cb.checked); }
+
+function getDies(){
+  const e=new Date(document.getElementById('entrada').value);
+  const s=new Date(document.getElementById('sortida').value);
+  if(!e||!s||s<=e) return 0;
+  return Math.round((s-e)/(86400000));
+}
+
+function getPreu(){
+  const sel=document.getElementById('animal');
+  const opt=sel.options[sel.selectedIndex];
+  return opt?parseFloat(opt.dataset.preu||23):23;
+}
+
+function updateResum(){
+  const dies=getDies(); const preu=getPreu();
+  const base=dies*preu;
+  const menjar=document.querySelector('#s0 input').checked?dies*5:0;
+  const passeig=document.querySelector('#s1 input').checked?dies*4:0;
+  const bany=document.querySelector('#s2 input').checked?25:0;
+  const foto=document.querySelector('#s3 input').checked?dies*2:0;
+  const med=document.querySelector('#s4 input').checked?dies*3:0;
+  const vet=document.querySelector('#s5 input').checked?30:0;
+  const total=base+menjar+passeig+bany+foto+med+vet;
+  document.getElementById('resum').innerHTML=`
+    <div class="resum-row"><span style="color:#6b7280">Dies d'estada</span><span style="font-weight:500">${dies} dies</span></div>
+    <div class="resum-row"><span style="color:#6b7280">Allotjament</span><span style="font-weight:500">${dies} × ${preu.toFixed(2)}€ = ${base.toFixed(2)}€</span></div>
+    ${menjar?`<div class="resum-row"><span style="color:#6b7280">Menjar</span><span style="font-weight:500">${menjar.toFixed(2)}€</span></div>`:''}
+    ${passeig?`<div class="resum-row"><span style="color:#6b7280">Passeig</span><span style="font-weight:500">${passeig.toFixed(2)}€</span></div>`:''}
+    ${bany?`<div class="resum-row"><span style="color:#6b7280">Bany i perruqueria</span><span style="font-weight:500">${bany.toFixed(2)}€</span></div>`:''}
+    ${foto?`<div class="resum-row"><span style="color:#6b7280">Foto diària</span><span style="font-weight:500">${foto.toFixed(2)}€</span></div>`:''}
+    ${med?`<div class="resum-row"><span style="color:#6b7280">Medicació</span><span style="font-weight:500">${med.toFixed(2)}€</span></div>`:''}
+    ${vet?`<div class="resum-row"><span style="color:#6b7280">Visita veterinari</span><span style="font-weight:500">${vet.toFixed(2)}€</span></div>`:''}
+    <div class="resum-row"><span style="color:#6b7280">Habitació</span><span style="font-weight:500">${selHab||'— No seleccionada'}</span></div>
+    <div class="resum-row"><span>Total previst</span><span style="color:#3d7a25">${total.toFixed(2)} €</span></div>`;
+}
+
+function guardar(){
+  const client=document.getElementById('client').value.trim();
+  const animal=document.getElementById('animal').value;
+  if(!client){alert('Seleccioneu un client');return;}
+  if(!animal||animal.includes('Seleccioneu')){alert('Seleccioneu un animal');return;}
+  if(!selHab){alert('Seleccioneu una habitació disponible');return;}
+  alert(`Reserva confirmada!\nClient: ${client}\nHabitació: ${selHab}`);
+  window.location='reserves.html';
+}
+
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
