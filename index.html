@@ -144,22 +144,154 @@
       .etable th:nth-child(4),.etable td:nth-child(4){display:none}
       .sec{border-top:1px solid var(--border);margin-top:6px}
     }
+    .dd{position:relative;display:inline-block}
+    .dd-toggle{color:#ddebd8;font-size:13px;padding:0 11px;line-height:36px;text-decoration:none;display:block;white-space:nowrap;cursor:pointer}
+    .dd-toggle:hover,.dd:hover>.dd-toggle{background:rgba(255,255,255,0.15);color:#fff}
+    .dd-menu{display:none;position:absolute;top:36px;left:0;background:#4a7a42;min-width:195px;z-index:1000;box-shadow:2px 4px 8px rgba(0,0,0,0.35)}
+    .dd:hover>.dd-menu{display:block}
+    .dd-menu>a,.dd-menu>.dd-sub>.dd-sub-toggle{display:block;color:#e8f5e3;font-size:13px;padding:7px 14px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.09)}
+    .dd-menu>a:hover{background:#5a9050;color:#fff}
+    .dd-sub{position:relative}
+    .dd-sub>.dd-sub-toggle:hover,.dd-sub:hover>.dd-sub-toggle{background:#5a9050;color:#fff}
+    .dd-sub-menu{display:none;position:absolute;top:0;left:100%;background:#5a9050;min-width:210px;z-index:1001;box-shadow:2px 4px 8px rgba(0,0,0,0.3)}
+    .dd-sub:hover>.dd-sub-menu{display:block}
+    .dd-sub-menu>a{display:block;color:#e8f5e3;font-size:13px;padding:7px 14px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.09)}
+    .dd-sub-menu>a:hover{background:#6aaa60;color:#fff}
   </style>
 </head>
 <body>
 
 <!-- DESKTOP NAV -->
 <div class="nav-top">
-  <span style="color:#ddebd8;padding:0 8px;font-size:14px">⊞</span>
-  <a href="#">HOTEL</a>
-  <a href="#">NOU</a>
-  <a href="pages/planning.html">VEURE</a>
-  <a href="pages/eines.html">EINES</a>
-  <a href="pages/configuracio.html">CONFIGURACIÓ</a>
-  <a href="#" style="display:flex;align-items:center;gap:3px;line-height:34px">❓ GUIA D'ÚS</a>
+  <span style="color:#ddebd8;padding:0 8px;font-size:15px">⊞</span>
+
+  <div class="dd">
+    <a class="dd-toggle">HOTEL</a>
+    <div class="dd-menu">
+      <a href="#">Criador</a><a href="#">Perruqueria</a><a href="#">Tenda</a>
+      <a href="#">Marketing</a><a href="#">Guarderia</a><a href="#">Ensinistrament</a><a href="#">Veterinari</a>
+    </div>
+  </div>
+
+  <div class="dd">
+    <a class="dd-toggle">NOU</a>
+    <div class="dd-menu">
+      <a href="pages/nova-reserva.html">Reserva</a>
+      <a href="pages/nova-reserva.html">Entrada</a>
+      <a href="pages/nova-reserva.html">Sortida</a>
+      <a href="pages/nou-client.html">Client</a>
+      <a href="pages/nou-animal.html">Animal</a>
+      <a href="#">Proveïdor</a><a href="#">Veterinari</a><a href="#">Gasto</a>
+    </div>
+  </div>
+
+  <div class="dd">
+    <a class="dd-toggle">VEURE</a>
+    <div class="dd-menu">
+      <a href="pages/planning.html">Planning</a>
+      <a href="#">Mapa d'ocupació</a>
+      <a href="pages/reserves.html">Reserves</a>
+      <a href="pages/reserves.html">Reserves Online</a>
+      <a href="pages/reserves.html">Entrades</a>
+      <a href="pages/reserves.html">Sortides</a>
+      <a href="pages/clients.html">Clients</a>
+      <a href="pages/animals.html">Animals</a>
+      <a href="#">Proveïdors</a><a href="#">Veterinaris</a>
+      <a href="pages/vendes.html">Vendes</a>
+      <a href="pages/vendes.html">Despeses</a>
+      <a href="#">Recordatoris automàtics</a>
+    </div>
+  </div>
+
+  <div class="dd">
+    <a class="dd-toggle">INFORMES I GRÀFICS</a>
+    <div class="dd-menu">
+      <a href="#">Resultat financer</a>
+      <a href="#">Despeses</a>
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Facturació »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Facturació</a><a href="#">Factures Impagades</a><a href="#">Pendent facturar</a>
+        </div>
+      </div>
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Clients »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Clients</a><a href="#">Adreces</a>
+        </div>
+      </div>
+      <a href="#">Animals</a>
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Rendibilitat »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Clients Rendibles</a><a href="#">Animals Rendibles</a><a href="#">Serveis i Productes Rendibles</a>
+        </div>
+      </div>
+      <a href="#">Facturació de Productes i Serveis</a>
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Ocupació »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Ocupació Hotel</a><a href="#">Habitacions més utilitzades</a>
+        </div>
+      </div>
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Estimació »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Estimació vendes</a><a href="#">Estimació Reserves</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dd">
+    <a class="dd-toggle">EINES</a>
+    <div class="dd-menu">
+      <a href="pages/eines.html">Tasques</a>
+      <a href="pages/eines.html">Avisos i Alertes</a>
+      <a href="#">Documents i Contractes</a>
+      <a href="#">Instal·lacions</a>
+      <a href="#">Mailing - Mailchimp</a>
+      <a href="#">Ajuda</a>
+    </div>
+  </div>
+
+  <div class="dd">
+    <a class="dd-toggle">CONFIGURACIÓ</a>
+    <div class="dd-menu">
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Configuració Bàsica »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Idioma / Moneda</a><a href="#">Dades d'empresa</a><a href="#">Races</a>
+          <a href="#">Formes de pagament</a><a href="#">Facturació electrònica</a><a href="#">Nombre de factures</a>
+        </div>
+      </div>
+      <a href="#">Empleats</a>
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Hotel »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Serveis Hotel</a><a href="#">Habitacions</a><a href="#">Hora de Sortida</a>
+        </div>
+      </div>
+      <a href="#">Planning</a>
+      <a href="#">Reserves Online</a>
+      <a href="#">Recordatoris automàtics</a>
+      <div class="dd-sub">
+        <a class="dd-sub-toggle">Usuaris »</a>
+        <div class="dd-sub-menu">
+          <a href="#">Usuaris</a><a href="#">Permisos</a><a href="#">Control d'accessos</a>
+        </div>
+      </div>
+      <a href="#">Gestió de Dades</a>
+      <a href="#">Consums</a>
+      <a href="pages/configuracio.html">Configuració avançada</a>
+    </div>
+  </div>
+
+  <a href="#" style="color:#ddebd8;font-size:13px;padding:0 10px;line-height:36px;text-decoration:none">❓ GUIA D'ÚS</a>
+
   <div class="nav-right">
-    <button style="color:#ddebd8;font-size:13px;background:none;border:none;cursor:pointer;padding:0 8px;line-height:34px">⚠</button>
-    <button style="color:#ddebd8;font-size:13px;background:none;border:none;cursor:pointer;padding:0 8px;line-height:34px">⏻</button>
+    <button style="color:#ddebd8;font-size:14px;background:none;border:none;cursor:pointer;padding:0 8px;line-height:36px">⚠</button>
+    <button style="color:#ddebd8;font-size:14px;background:none;border:none;cursor:pointer;padding:0 8px;line-height:36px">⏻</button>
   </div>
 </div>
 
