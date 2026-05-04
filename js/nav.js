@@ -40,13 +40,7 @@ function renderNav() {
   <div class="nav-top">
     <span style="color:#e8f5f4;padding:0 8px;font-size:15px">⊞</span>
 
-    <div class="dd">
-      <a class="dd-toggle">HOTEL</a>
-      <div class="dd-menu">
-        <a href="#">Criador</a><a href="#">Perruqueria</a><a href="#">Tenda</a>
-        <a href="#">Marketing</a><a href="#">Guarderia</a><a href="#">Ensinistrament</a><a href="#">Veterinari</a>
-      </div>
-    </div>
+    <a href="${base}index.html" style="color:#e8f5f4;font-size:13px;padding:0 11px;line-height:36px;text-decoration:none;white-space:nowrap">🏠 HOTEL</a>
 
     <div class="dd">
       <a class="dd-toggle">NOU</a>
